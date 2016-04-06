@@ -13,7 +13,7 @@ class MessageServer
 public:
 
 	template<typename... Args>
-	MessageServer(Args... args) : comm_(args...)
+	MessageServer(Args&... args) : comm_(args...)
 	{
 	}
 
