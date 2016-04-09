@@ -4,24 +4,26 @@
 
 #include <stdint.h>
 
+namespace serialmessages
+{
 /**
-	\class SerialStream
+    \class SerialStream
 */
 class SerialStream
 {
 public:
 
-	SerialStream(uint8_t * buffer, size_t len) : 
+    SerialStream(uint8_t * buffer, size_t len) : 
         buffer_(buffer), 
         length_(len),
         input_ptr_(buffer),
         output_ptr_(buffer)
-	{
-	}
+    {
+    }
 
-	~SerialStream()
-	{
-	}
+    ~SerialStream()
+    {
+    }
     
     void reset()
     {
@@ -34,11 +36,12 @@ public:
     // ...
 
 private:
-	uint8_t* buffer_; ///< Pointer to a buffer of data
+    uint8_t* buffer_; ///< Pointer to a buffer of data
     size_t length_;   ///< Length of the buffer
     
     uint8_t* input_ptr_; ///< Pointer to the next byte to be serialized
     uint8_t* output_ptr_; ///< Pointer to the next byte to be deserialized
 };
+}
 
 #endif // SERIALMESSAGES_SERIAL_STREAM_H
