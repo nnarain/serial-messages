@@ -27,7 +27,13 @@ public:
     
     void spinOnce()
     {
-        
+    	int byte = comm_.read();
+
+    	if(byte > 0)
+    	{
+    		char c = (byte & 0x00FF);
+			comm_.write((uint8_t*)&c, 1);
+    	}
     }
 
 private:
