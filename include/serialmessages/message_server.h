@@ -4,6 +4,8 @@
 
 #include <simplelogger/simplelogger.h>
 
+#include "message_protocol.h"
+
 namespace serialmessages
 {
 /**
@@ -15,7 +17,9 @@ class MessageServer
 public:
 
 	template<typename... Args>
-	MessageServer(Args&... args) : comm_(args...)
+	MessageServer(Args&... args) : 
+        comm_(args...),
+        sync_(false)
 	{
 	}
 
@@ -30,26 +34,30 @@ public:
     
     void spinOnce()
     {
-        static const char sequence[] = "Hello World";
-        static const size_t len = sizeof(sequence);
+        // not synced with the client
+        if(!sync_)
+        {
+            // send sync sequence
+            comm_.write((uint8_t*)SIGNATURE, sizeof(SIGNATURE));
+        }
 
-        comm_.write((uint8_t*)sequence, len);
-
+        // attempt to read a byte from the client
         int byte = comm_.read();
 
-        if(byte >= 0)
+        if(byte > 0)
         {
-        	if(byte != 0)
-        		LOG_DEBUG("- %c", (char)byte);
-        }
-        else
-        {
-
+            // recieved client acknowlege
+            if(byte == CLIENT_ACK)
+            {
+                sync_ = true;
+                LOG_INFO("Client synchronised");
+            }
         }
     }
 
 private:
 	CommT comm_;
+    bool sync_;
 };
 }
 
