@@ -38,26 +38,55 @@ public:
         if(!sync_)
         {
             // send sync sequence
-            comm_.write((uint8_t*)SIGNATURE, sizeof(SIGNATURE));
+            comm_.write(protocol_.signature.data(), protocol_.signature.size());
         }
 
         // attempt to read a byte from the client
         int byte = comm_.read();
 
-        if(byte > 0)
+        // read byte from client
+        if(byte >= 0)
         {
-            // recieved client acknowlege
-            if(byte == CLIENT_ACK)
+            // check byte sequence to match client ack
+            protocol_.acknowledge.check((uint8_t)byte);
+            // if matched
+            if(protocol_.acknowledge.match())
             {
+                LOG_INFO("Client sync");
+
+                protocol_.acknowledge.reset();
                 sync_ = true;
-                LOG_INFO("Client synchronised");
+
+                // read next byte for client intention
+
+                // if intent to send message
+
+                    // read 4 bytes for message length
+                    // deserialize
+                    // dispatch
+
+                // 
             }
         }
     }
 
 private:
 	CommT comm_;
+    MessageProtocol protocol_;
     bool sync_;
+
+private:
+    uint8_t readByte()
+    {
+        int byte = -1;
+
+        while(byte == -1)
+        {
+            byte = comm_.read();
+        }
+
+        return (int)byte;
+    }
 };
 }
 
