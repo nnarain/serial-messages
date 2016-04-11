@@ -37,7 +37,7 @@ public:
 
         if(byte >= 0)
         {
-            if(!sync_)
+/*            if(!sync_)
             {
                 if((char)byte == *signature_)
                 {
@@ -46,9 +46,22 @@ public:
                     {
                         sync_ = true;
 
-                        char c = CLIENT_ACK;
-                        comm_.write((uint8_t*)&c, 1);
+                    //    char c = ACK;
+                        comm_.write((uint8_t*)ACK, sizeof(ACK));
                     }
+                }
+            }*/
+
+            if(!sync_)
+            {
+                protocol_.signature.check((uint8_t)byte);
+
+                if(protocol_.signature.match())
+                {
+                    protocol_.signature.reset();
+                    sync_ = true;
+
+                    comm_.write(protocol_.acknowledge.data(), protocol_.acknowledge.size());
                 }
             }
         }
@@ -56,6 +69,7 @@ public:
 
 private:
 	CommT comm_;
+    MessageProtocol protocol_;
     const char * signature_;
     int signature_counter_;
     bool sync_;
