@@ -58,14 +58,27 @@ public:
                 sync_ = true;
 
                 // read next byte for client intention
+                uint8_t intent = readByte();
 
                 // if intent to send message
-
+                if(intent == MessageProtocol::Intent::SEND_MESSAGE)
+                {
                     // read 4 bytes for message length
                     // deserialize
                     // dispatch
+                }
+                else if(intent == MessageProtocol::Intent::READ_MESSAGE)
+                {
+                    // send the client a message
+                }
+                else
+                {
+                    LOG_ERROR("Received invalid client intent");
+                    LOG_WARN("Client desync");
+                }
 
-                // 
+                //
+                sync_ = false;
             }
         }
     }
@@ -86,6 +99,16 @@ private:
         }
 
         return (int)byte;
+    }
+
+    void gets(const char * str)
+    {
+        char c = (uint8_t)readByte();
+        while(c != 0)
+        {
+            *str = c;
+            str++;
+        }
     }
 };
 }
