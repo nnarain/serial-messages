@@ -5,6 +5,7 @@
 #include <simplelogger/simplelogger.h>
 
 #include "message_protocol.h"
+#include "serial_stream.h"
 
 namespace serialmessages
 {
