@@ -1,3 +1,8 @@
+/**
+    \file message_client.h
+    \author Natesh Narain <nnaraindev@gmail.com>
+*/
+
 #ifndef SERIALMESSAGES_MESSAGE_CLIENT_H
 #define SERIALMESSAGES_MESSAGE_CLIENT_H
 
