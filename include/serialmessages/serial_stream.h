@@ -168,6 +168,19 @@ public:
         return *this;
     }
 
+    SerialStream& operator<<(const char *str)
+    {
+        while(*str++)
+        {
+            buffer_[num_bytes_++] = *str;
+            checksum_ += *str;
+        }
+
+        buffer_[num_bytes_++] = 0;
+
+        return *this;
+    }
+
     /* Deserialization */
 
     SerialStream& operator>>(uint8_t& rhs)
@@ -227,6 +240,18 @@ public:
         
         *this >> double_to_unit.datau;
         rhs = double_to_unit.dataf;
+
+        return *this;
+    }
+
+    SerialStream& operator>>(char * str)
+    {
+        while(buffer_[read_idx_])
+        {
+            *str++ = buffer_[read_idx_++];
+        }
+
+        *str = 0;
 
         return *this;
     }
