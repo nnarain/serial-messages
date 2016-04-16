@@ -27,7 +27,7 @@ public:
 	{
 	}
 
-	bool putItem(ItemT* item)
+	bool put(ItemT* item)
 	{
 		uint16_t hashKey = hash(item->topic);
 		uint16_t idx = hashKey % BUFFER_SIZE;
@@ -62,7 +62,7 @@ public:
 		return false;
 	}
 
-	ItemT* getItem(const char * key)
+	ItemT* get(const char * key)
 	{
 		uint16_t hashKey = hash(key);
 		uint16_t idx = hashKey % BUFFER_SIZE;
