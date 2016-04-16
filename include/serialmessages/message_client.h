@@ -8,6 +8,7 @@
 
 #include "message_protocol.h"
 #include "serial_stream.h"
+#include "stdmsgs/string.h"
 
 namespace serialmessages
 {
@@ -22,9 +23,7 @@ public:
 	template<typename... Args>
 	MessageClient(Args... args) : 
         comm_(args...),
-        signature_(SIGNATURE),
-        sync_(false),
-        signature_counter_(0)
+        sync_(false)
 	{
 	}
 
@@ -58,8 +57,17 @@ public:
                     uint8_t out_buffer[512];
                     SerialStream ss(out_buffer, 512);
 
-                    ss << (uint8_t)MessageProtocol::Intent::SEND_MESSAGE << "test_topic" << (uint32_t)100;
+                    stdmsgs::String msg;
+                    msg.data = "Hello World!!!";
 
+                    ss << (uint8_t)MessageProtocol::Intent::SEND_MESSAGE << "test_topic";
+                    comm_.write(out_buffer, ss.size());
+
+                    ss.reset();
+
+                    msg.serialize(ss);
+
+                    writeInt32((uint32_t)ss.size());
                     comm_.write(out_buffer, ss.size());
                 }
             }
@@ -69,9 +77,18 @@ public:
 private:
 	CommT comm_;
     MessageProtocol protocol_;
-    const char * signature_;
-    int signature_counter_;
     bool sync_;
+
+private:
+    void writeInt32(uint32_t value)
+    {
+        uint8_t buff[4];
+        SerialStream ss(buff, 4);
+        ss << value;
+
+        comm_.write(buff, 4);
+    }
+
 };
 }
 

@@ -57,6 +57,7 @@ public:
     void reset()
     {
         num_bytes_ = 0;
+        read_idx_ = 0;
         checksum_ = 0;
     }
 

@@ -9,6 +9,7 @@
 
 #include "message_protocol.h"
 #include "serial_stream.h"
+#include "subscriber.h"
 #include "hash_table.h"
 #include "stdmsgs/string.h"
 
@@ -68,8 +69,6 @@ public:
                 // read next byte for client intention
                 uint8_t intent = readByte();
 
-                LOG_INFO("client intent: %d", intent);
-
                 // if intent to send message
                 if(intent == MessageProtocol::Intent::SEND_MESSAGE)
                 {
@@ -93,7 +92,11 @@ public:
                     // read message
                     readBytes(in_buffer + topic_length + 4, message_length);
 
-                    //
+                    // get subscriber using topic string as key
+                    SubscriberBase* subscriber = subscribers_.get(topic.data);
+
+                    // call subscriber callback
+                    subscriber->callback(ss);
                 }
                 else if(intent == MessageProtocol::Intent::READ_MESSAGE)
                 {
@@ -111,10 +114,17 @@ public:
         }
     }
 
+    void subscribe(SubscriberBase* subscriber)
+    {
+        subscribers_.put(subscriber);
+    }
+
 private:
     CommT comm_;
     MessageProtocol protocol_;
     bool sync_;
+
+    HashTable<SubscriberBase, 10> subscribers_;
 
 private:
     void readBytes(uint8_t* data, size_t nbytes)
@@ -140,7 +150,6 @@ private:
         char c;
         while(c = (char)readByte())
         {
-            LOG_INFO("%c", c);
             *str++ = c;
         }
         *str = 0;
