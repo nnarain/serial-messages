@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-namespace serialmessage
+namespace serialmessages
 {
 class MessageBase
 {

@@ -1,7 +1,7 @@
 
 #ifndef SERIALMESSAGES_SERIAL_STREAM_H
 #define SERIALMESSAGES_SERIAL_STREAM_H
-#include <simplelogger/simplelogger.h>
+
 #include <stdint.h>
 
 namespace serialmessages
@@ -170,10 +170,11 @@ public:
 
     SerialStream& operator<<(const char *str)
     {
-        while(*str++)
+        while(*str)
         {
-            buffer_[num_bytes_++] = *str;
-            checksum_ += *str;
+            char c = *str++;
+            buffer_[num_bytes_++] = c;
+            checksum_ += c;
         }
 
         buffer_[num_bytes_++] = 0;
@@ -251,7 +252,7 @@ public:
             *str++ = buffer_[read_idx_++];
         }
 
-        *str = 0;
+        *str++ = buffer_[read_idx_++];
 
         return *this;
     }
