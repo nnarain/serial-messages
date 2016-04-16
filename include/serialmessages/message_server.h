@@ -6,13 +6,14 @@
 
 #include "message_protocol.h"
 #include "serial_stream.h"
+#include "hash_table.h"
 
 namespace serialmessages
 {
 /**
 	\class MessageServer
 */
-template<typename CommT>
+template<typename CommT, unsigned int IN_BUFFER_SIZE=512>
 class MessageServer
 {
 public:
@@ -64,8 +65,16 @@ public:
                 // if intent to send message
                 if(intent == MessageProtocol::Intent::SEND_MESSAGE)
                 {
+                    uint8_t in_buffer[IN_BUFFER_SIZE];
+
+                    // read topic string
+                    gets((char *)in_buffer);
+
                     // read 4 bytes for message length
+                    readBytes(in_buffer, 4);
+
                     // deserialize
+                    
                     // dispatch
                 }
                 else if(intent == MessageProtocol::Intent::READ_MESSAGE)
@@ -85,11 +94,17 @@ public:
     }
 
 private:
-	CommT comm_;
+    CommT comm_;
     MessageProtocol protocol_;
     bool sync_;
 
 private:
+    void readBytes(uint8_t* data, size_t nbytes)
+    {
+        while(nbytes--)
+            *data++ = readByte();
+    }
+
     uint8_t readByte()
     {
         int byte = -1;
@@ -102,9 +117,9 @@ private:
         return (int)byte;
     }
 
-    void gets(const char * str)
+    void gets(char * str)
     {
-        char c = (uint8_t)readByte();
+        char c = (char)readByte();
         while(c != 0)
         {
             *str = c;
