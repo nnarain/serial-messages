@@ -1,4 +1,7 @@
-
+/**
+    \file message_server.h
+    \author Natesh Narain <nnaraindev@gmail.com>
+*/
 #ifndef SERIALMESSAGE_MESSAGE_SERVER_H
 #define SERIALMESSAGE_MESSAGE_SERVER_H
 

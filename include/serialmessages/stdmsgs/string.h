@@ -1,4 +1,11 @@
 
+/**
+	String message
+	
+	\file string.h
+	\author Natesh Narain <nnaraindev@gmail.com>
+*/
+
 #ifndef SERIALMESSAGES_STDMSGS_STRING_H
 #define SERIALMESSAGES_STDMSGS_STRING_H
 

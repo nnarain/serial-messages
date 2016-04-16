@@ -1,3 +1,9 @@
+
+/**
+	\file message_base.h
+	\author Natesh Narain <nnaraindev@gmail.com>
+*/
+
 #ifndef SERIALMESSAGES_MESSAGE_BASE_H
 #define SERIALMESSAGES_MESSAGE_BASE_H
 
@@ -7,6 +13,10 @@
 
 namespace serialmessages
 {
+/**
+	\class MessageBase
+	\brief interface for messages
+*/
 class MessageBase
 {
 public:

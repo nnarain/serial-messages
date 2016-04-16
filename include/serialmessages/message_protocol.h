@@ -1,3 +1,7 @@
+/**
+    \file message_protocol.h
+    \author Natesh Narain <nnaraindev@gmail.com>
+*/
 
 #ifndef SERIALMESSAGES_MESSAGE_PROTOCOL_H
 #define SERIALMESSAGES_MESSAGE_PROTOCOL_H
@@ -9,6 +13,10 @@
 
 namespace serialmessages
 {
+/**
+	\class MessageProtocol
+	\brief encapsulate protocol specific information
+*/
 class MessageProtocol
 {
 public:

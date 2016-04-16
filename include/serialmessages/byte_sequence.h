@@ -1,4 +1,9 @@
 
+/**
+	\file byte_sequence.h
+	\author Natesh Narain
+*/
+
 #ifndef SERIALMESSAGES_BYTE_SEQUENCe_H
 #define SERIALMESSAGES_BYTE_SEQUENCe_H
 
@@ -6,6 +11,10 @@
 
 namespace serialmessages
 {
+/**
+	\class ByteSequence
+	\brief Match sequence of bytes
+*/
 class ByteSequence
 {
 public:
