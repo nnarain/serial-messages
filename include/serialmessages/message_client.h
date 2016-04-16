@@ -2,6 +2,7 @@
 #define SERIALMESSAGES_MESSAGE_CLIENT_H
 
 #include "message_protocol.h"
+#include "serial_stream.h"
 
 namespace serialmessages
 {
@@ -62,6 +63,14 @@ public:
                     sync_ = true;
 
                     comm_.write(protocol_.acknowledge.data(), protocol_.acknowledge.size());
+
+                    // for now just send a send intent, test topic string and message length
+                    uint8_t out_buffer[512];
+                    SerialStream ss(out_buffer, 512);
+
+                    ss << (uint8_t)MessageProtocol::Intent::SEND_MESSAGE << "test_topic" << (uint32_t)100;
+
+                    comm_.write(out_buffer, ss.size());
                 }
             }
         }

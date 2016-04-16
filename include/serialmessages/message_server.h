@@ -7,6 +7,9 @@
 #include "message_protocol.h"
 #include "serial_stream.h"
 #include "hash_table.h"
+#include "stdmsgs/string.h"
+
+#include <cstring>
 
 namespace serialmessages
 {
@@ -62,6 +65,8 @@ public:
                 // read next byte for client intention
                 uint8_t intent = readByte();
 
+                LOG_INFO("client intent: %d", intent);
+
                 // if intent to send message
                 if(intent == MessageProtocol::Intent::SEND_MESSAGE)
                 {
@@ -71,11 +76,17 @@ public:
                     gets((char *)in_buffer);
 
                     // read 4 bytes for message length
-                    readBytes(in_buffer, 4);
+                    readBytes(in_buffer + strlen((const char *)in_buffer) + 1, 4);
 
-                    // deserialize
-                    
-                    // dispatch
+                    // deserialize topic string and message length
+                    stdmsgs::String topic;
+                    uint32_t message_length;
+
+                    SerialStream ss(in_buffer, IN_BUFFER_SIZE);
+                    topic.deserialize(ss);
+                    ss >> message_length;
+
+                    LOG_INFO("%s message length: %d byte(s)", topic.data, message_length);
                 }
                 else if(intent == MessageProtocol::Intent::READ_MESSAGE)
                 {
@@ -119,12 +130,13 @@ private:
 
     void gets(char * str)
     {
-        char c = (char)readByte();
-        while(c != 0)
+        char c;
+        while(c = (char)readByte())
         {
-            *str = c;
-            str++;
+            LOG_INFO("%c", c);
+            *str++ = c;
         }
+        *str = 0;
     }
 };
 }
