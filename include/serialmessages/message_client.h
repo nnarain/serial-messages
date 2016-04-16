@@ -38,21 +38,6 @@ public:
 
         if(byte >= 0)
         {
-/*            if(!sync_)
-            {
-                if((char)byte == *signature_)
-                {
-                    signature_counter_++;
-                    if(signature_counter_ == sizeof(SIGNATURE))
-                    {
-                        sync_ = true;
-
-                    //    char c = ACK;
-                        comm_.write((uint8_t*)ACK, sizeof(ACK));
-                    }
-                }
-            }*/
-
             if(!sync_)
             {
                 protocol_.signature.check((uint8_t)byte);

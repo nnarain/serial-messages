@@ -76,7 +76,8 @@ public:
                     gets((char *)in_buffer);
 
                     // read 4 bytes for message length
-                    readBytes(in_buffer + strlen((const char *)in_buffer) + 1, 4);
+                    size_t topic_length = strlen((const char *)in_buffer) + 1;
+                    readBytes(in_buffer + topic_length, 4);
 
                     // deserialize topic string and message length
                     stdmsgs::String topic;
@@ -86,7 +87,10 @@ public:
                     topic.deserialize(ss);
                     ss >> message_length;
 
-                    LOG_INFO("%s message length: %d byte(s)", topic.data, message_length);
+                    // read message
+                    readBytes(in_buffer + topic_length + 4, message_length);
+
+                    //
                 }
                 else if(intent == MessageProtocol::Intent::READ_MESSAGE)
                 {
