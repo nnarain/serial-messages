@@ -21,7 +21,7 @@ namespace serialmessages
 	\class MessageServer
 */
 template<typename CommT, unsigned int IN_BUFFER_SIZE=512>
-class MessageServer
+class MessageServer : public MessageProtocol
 {
 public:
 
@@ -47,7 +47,7 @@ public:
         if(!sync_)
         {
             // send sync sequence
-            comm_.write(protocol_.signature.data(), protocol_.signature.size());
+            comm_.write(signature.data(), signature.size());
         }
 
         // attempt to read a byte from the client
@@ -57,13 +57,13 @@ public:
         if(byte >= 0)
         {
             // check byte sequence to match client ack
-            protocol_.acknowledge.check((uint8_t)byte);
+            acknowledge.check((uint8_t)byte);
             // if matched
-            if(protocol_.acknowledge.match())
+            if(acknowledge.match())
             {
                 LOG_INFO("Client sync");
 
-                protocol_.acknowledge.reset();
+                acknowledge.reset();
                 sync_ = true;
 
                 // read next byte for number of messages the client wants to send
@@ -90,7 +90,6 @@ public:
 
 private:
     CommT comm_;
-    MessageProtocol protocol_;
     bool sync_;
 
     HashTable<SubscriberBase, 10> subscribers_;

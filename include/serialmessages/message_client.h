@@ -16,7 +16,7 @@ namespace serialmessages
 	\class MessageClient
 */
 template<typename CommT>
-class MessageClient
+class MessageClient : public MessageProtocol
 {
 public:
 
@@ -44,14 +44,14 @@ public:
         {
             if(!sync_)
             {
-                protocol_.signature.check((uint8_t)byte);
+                signature.check((uint8_t)byte);
 
-                if(protocol_.signature.match())
+                if(signature.match())
                 {
-                    protocol_.signature.reset();
+                    signature.reset();
                     sync_ = true;
 
-                    comm_.write(protocol_.acknowledge.data(), protocol_.acknowledge.size());
+                    comm_.write(acknowledge.data(), acknowledge.size());
 
                     // for now just send a send intent, test topic string and message length
                     uint8_t out_buffer[512];
@@ -79,7 +79,6 @@ public:
 
 private:
 	CommT comm_;
-    MessageProtocol protocol_;
     bool sync_;
 
 private:
