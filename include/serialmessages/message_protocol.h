@@ -19,7 +19,7 @@ namespace serialmessages
 */
 class MessageProtocol
 {
-public:
+protected:
 	ByteSequence signature;
 	ByteSequence acknowledge;
 
