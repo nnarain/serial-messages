@@ -60,15 +60,18 @@ public:
                     stdmsgs::String msg;
                     msg.data = "Hello World!!!";
 
-                    ss << (uint8_t)MessageProtocol::Intent::SEND_MESSAGE << "test_topic";
-                    comm_.write(out_buffer, ss.size());
+                    uint8_t num_messages = 4;
+                    comm_.write(&num_messages, 1);
 
-                    ss.reset();
+                    for(int i = 0; i < 4; i++)
+                    {
+                        comm_.write("test_topic", sizeof("test_topic"));
 
-                    msg.serialize(ss);
+                        msg.serialize(ss);
 
-                    writeInt32((uint32_t)ss.size());
-                    comm_.write(out_buffer, ss.size());
+                        writeInt32((uint32_t)ss.size());
+                        comm_.write(out_buffer, ss.size());
+                    }
                 }
             }
         }

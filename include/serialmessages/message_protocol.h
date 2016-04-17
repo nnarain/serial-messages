@@ -20,16 +20,6 @@ namespace serialmessages
 class MessageProtocol
 {
 public:
-	struct Intent
-	{
-		enum
-		{
-			READ_MESSAGE = 0,
-			SEND_MESSAGE = 1
-		};
-	};
-
-public:
 	ByteSequence signature;
 	ByteSequence acknowledge;
 

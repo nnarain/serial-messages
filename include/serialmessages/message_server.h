@@ -66,47 +66,16 @@ public:
                 protocol_.acknowledge.reset();
                 sync_ = true;
 
-                // read next byte for client intention
-                uint8_t intent = readByte();
+                // read next byte for number of messages the client wants to send
+                uint8_t num_bytes = readByte();
 
                 // if intent to send message
-                if(intent == MessageProtocol::Intent::SEND_MESSAGE)
+                while(num_bytes--)
                 {
-                    uint8_t in_buffer[IN_BUFFER_SIZE];
-
-                    // read topic string
-                    gets((char *)in_buffer);
-
-                    // read 4 bytes for message length
-                    size_t topic_length = strlen((const char *)in_buffer) + 1;
-                    readBytes(in_buffer + topic_length, 4);
-
-                    // deserialize topic string and message length
-                    stdmsgs::String topic;
-                    uint32_t message_length;
-
-                    SerialStream ss(in_buffer, IN_BUFFER_SIZE);
-                    topic.deserialize(ss);
-                    ss >> message_length;
-
-                    // read message
-                    readBytes(in_buffer + topic_length + 4, message_length);
-
-                    // get subscriber using topic string as key
-                    SubscriberBase* subscriber = subscribers_.get(topic.data);
-
-                    // call subscriber callback
-                    subscriber->callback(ss);
+                    readMessage();
                 }
-                else if(intent == MessageProtocol::Intent::READ_MESSAGE)
-                {
-                    // send the client a message
-                }
-                else
-                {
-                    LOG_ERROR("Received invalid client intent");
-                    LOG_WARN("Client desync");
-                }
+
+                // send byte indicating number of messages we want to send to client
 
                 //
                 sync_ = false;
@@ -127,6 +96,42 @@ private:
     HashTable<SubscriberBase, 10> subscribers_;
 
 private:
+    void readMessage()
+    {
+        uint8_t in_buffer[IN_BUFFER_SIZE];
+
+        // read topic string
+        gets((char *)in_buffer);
+
+        // read 4 bytes for message length
+        size_t topic_length = strlen((const char *)in_buffer) + 1;
+        readBytes(in_buffer + topic_length, 4);
+
+        // deserialize topic string and message length
+        stdmsgs::String topic;
+        uint32_t message_length;
+
+        SerialStream ss(in_buffer, IN_BUFFER_SIZE);
+        topic.deserialize(ss);
+        ss >> message_length;
+
+        // read message
+        readBytes(in_buffer + topic_length + 4, message_length);
+
+        // get subscriber using topic string as key
+        SubscriberBase* subscriber = subscribers_.get(topic.data);
+
+        if(subscriber)
+        {
+            // call subscriber callback
+            subscriber->callback(ss);
+        }
+        else
+        {
+            LOG_WARN("No subscriber for /%s", topic.data);
+        }
+    }
+
     void readBytes(uint8_t* data, size_t nbytes)
     {
         while(nbytes--)
