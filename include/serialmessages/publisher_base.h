@@ -8,11 +8,16 @@
 #define SERIALMESSAGE_PUBLISHER_BASE_H
 
 #include "serial_stream.h"
+//#include "message_protocol.h"
 
 namespace serialmessages
 {
+class MessageProtocol;
+
 class PublisherBase
 {
+	friend class MessageProtocol;
+
 public:
 	const char * topic;
 
@@ -21,6 +26,14 @@ public:
 	}
 
 	virtual void serializeMessage(SerialStream& stream) = 0;
+
+protected:
+	MessageProtocol* protocol_;
+
+	void post()
+	{
+		protocol_->queuePublisher(this);
+	}
 };
 }
 

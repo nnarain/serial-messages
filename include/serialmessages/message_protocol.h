@@ -7,6 +7,8 @@
 #define SERIALMESSAGES_MESSAGE_PROTOCOL_H
 
 #include "byte_sequence.h"
+#include "publisher_base.h"
+#include "ring_buffer.h"
 
 #define SIGNATURE  "SYNCSIGNATURE"
 #define ACK "ACK"
@@ -35,7 +37,18 @@ public:
 	{
 	}
 
-private:
+	void advertise(PublisherBase* pub)
+	{
+		pub->protocol_ = this;
+	}
+
+	void queuePublisher(PublisherBase* pub)
+	{
+		publisher_queue_.put(pub);
+	}
+
+protected:
+	RingBuffer<PublisherBase*, 10> publisher_queue_;
 };
 }
 
