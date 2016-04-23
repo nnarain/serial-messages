@@ -36,7 +36,7 @@ public:
         comm_.initialize();
     }
     
-    void spinOnce()
+    virtual void spinOnce()
     {
     	int byte = comm_.read();
 
@@ -53,25 +53,17 @@ public:
 
                     comm_.write(acknowledge.data(), acknowledge.size());
 
-                    // for now just send a send intent, test topic string and message length
-                    uint8_t out_buffer[512];
-                    SerialStream ss(out_buffer, 512);
+                    // tell server the number of messages we want to right
+                    uint8_t messages_to_write = (uint8_t)publisher_queue_.size();
+                    comm_.write(&messages_to_write, 1);
 
-                    stdmsgs::String msg;
-                    msg.data = "Hello World!!!";
-
-                    uint8_t num_messages = 4;
-                    comm_.write(&num_messages, 1);
-
-                    for(int i = 0; i < 4; i++)
+                    while(messages_to_write--)
                     {
-                        comm_.write("test_topic", sizeof("test_topic"));
-
-                        msg.serialize(ss);
-
-                        writeInt32((uint32_t)ss.size());
-                        comm_.write(out_buffer, ss.size());
+                        writeMessage();
                     }
+
+                    // read number of messages server wants to send
+                    // ...
                 }
             }
         }
@@ -82,6 +74,26 @@ private:
     bool sync_;
 
 private:
+    void writeMessage()
+    {
+        PublisherBase* publisher = publisher_queue_.get();
+
+        uint8_t header[64];
+        SerialStream header_stream(header, 64);
+
+        uint8_t data[128];
+        SerialStream data_stream(data, 128);
+
+        publisher->serializeMessage(data_stream);
+
+        header_stream << publisher->topic << (uint32_t)data_stream.size();
+
+        // write header
+        comm_.write(header, header_stream.size());
+        // write message data
+        comm_.write(data, data_stream.size());
+    }
+
     void writeInt32(uint32_t value)
     {
         uint8_t buff[4];

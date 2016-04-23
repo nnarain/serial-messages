@@ -8,18 +8,22 @@
 
 #include "byte_sequence.h"
 #include "publisher_base.h"
+#include "post_publisher.h"
 #include "ring_buffer.h"
 
-#define SIGNATURE  "SYNCSIGNATURE"
+#define SIGNATURE "SYNCSIGNATURE"
 #define ACK "ACK"
 
 namespace serialmessages
 {
+	// const char * SIGNATURE = "SYNCSIGNATURE";
+	// const char * ACK = "ACK";
+
 /**
 	\class MessageProtocol
 	\brief encapsulate protocol specific information
 */
-class MessageProtocol
+class MessageProtocol : public PostPublisher
 {
 protected:
 	ByteSequence signature;
@@ -37,12 +41,9 @@ public:
 	{
 	}
 
-	void advertise(PublisherBase* pub)
-	{
-		pub->protocol_ = this;
-	}
+	virtual void spinOnce() = 0;
 
-	void queuePublisher(PublisherBase* pub)
+	virtual void postPublisher(PublisherBase* pub)
 	{
 		publisher_queue_.put(pub);
 	}

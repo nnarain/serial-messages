@@ -41,7 +41,7 @@ public:
         return comm_.initialize();
     }
     
-    void spinOnce()
+    virtual void spinOnce()
     {
         // not synced with the client
         if(!sync_)
@@ -67,17 +67,17 @@ public:
                 sync_ = true;
 
                 // read next byte for number of messages the client wants to send
-                uint8_t num_bytes = readByte();
+                uint8_t messages_to_read = readByte();
 
                 // if intent to send message
-                while(num_bytes--)
+                while(messages_to_read--)
                 {
                     readMessage();
                 }
 
                 // send byte indicating number of messages we want to send to client
 
-                //
+                // transaction complete, set sync false
                 sync_ = false;
             }
         }
@@ -134,7 +134,7 @@ private:
     void readBytes(uint8_t* data, size_t nbytes)
     {
         while(nbytes--)
-            *data++ = readByte();
+            *data++ = (uint8_t)readByte();
     }
 
     uint8_t readByte()

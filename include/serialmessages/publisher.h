@@ -8,13 +8,20 @@
 #define SERIALMESSAGES_PUBLISHER_H
 
 #include "publisher_base.h"
+#include "post_publisher.h"
 
+namespace serialmessages
+{
+/**
+	\class Publisher
+*/
 template<class MessageT>
 class Publisher : public PublisherBase
 {
 public:
-
-	Publisher(const char * topic) : PublisherBase(topic)
+	Publisher(const char * topic, PostPublisher* post) : 
+		PublisherBase(topic),
+		post_(post)
 	{
 	}
 
@@ -24,17 +31,20 @@ public:
 
 	void publish(const MessageT& msg)
 	{
-		msg_ = msg;
+		msg_ = &msg;
+		post_->postPublisher(this);
 	}
 
 	virtual void serializeMessage(SerialStream& stream)
 	{
-		msg_.serialize(stream);
+		msg_->serialize(stream);
 	}
 
 private:
-	MessageT msg_;
+	PostPublisher* post_;
+	MessageT* msg_;
 };
+}
 
 #endif // SERIALMESSAGES_PUBLISHER_H
 

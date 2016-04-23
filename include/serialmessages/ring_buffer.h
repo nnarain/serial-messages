@@ -14,7 +14,8 @@ public:
 
 	RingBuffer() :
 		read_idx_(0),
-		write_idx_(0)
+		write_idx_(0),
+		size_(0)
 	{
 		// zero memory
 		memset(buffer_, 0, sizeof(T) * BUFFER_SIZE);
