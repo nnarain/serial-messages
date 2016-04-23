@@ -44,7 +44,7 @@ public:
         if(!this->sync_)
         {
             // send sync sequence
-            this->comm_.write(this->signature.data(), this->signature.size());
+            this->comm_.write(this->signature_.data(), this->signature_.size());
         }
 
         // attempt to read a byte from the client
@@ -54,13 +54,13 @@ public:
         if(byte >= 0)
         {
             // check byte sequence to match client ack
-            this->acknowledge.check((uint8_t)byte);
+            this->acknowledge_.check((uint8_t)byte);
             // if matched
-            if(this->acknowledge.match())
+            if(this->acknowledge_.match())
             {
                 LOG_INFO("Client sync");
 
-                this->acknowledge.reset();
+                this->acknowledge_.reset();
                 this->sync_ = true;
 
                 // read next byte for number of messages the client wants to send

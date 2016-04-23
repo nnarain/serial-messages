@@ -46,14 +46,14 @@ public:
         {
             if(!this->sync_)
             {
-                this->signature.check((uint8_t)byte);
+                this->signature_.check((uint8_t)byte);
 
-                if(this->signature.match())
+                if(this->signature_.match())
                 {
-                    this->signature.reset();
+                    this->signature_.reset();
                     this->sync_ = true;
 
-                    this->comm_.write(this->acknowledge.data(), this->acknowledge.size());
+                    this->comm_.write(this->acknowledge_.data(), this->acknowledge_.size());
 
                     // tell server the number of messages we want to right
                     uint8_t messages_to_write = (uint8_t)this->publisher_queue_.size();

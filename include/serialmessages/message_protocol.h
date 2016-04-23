@@ -39,8 +39,8 @@ public:
 	MessageProtocol(Args&... args) :
 		comm_(args...),
 		sync_(false),
-		signature((uint8_t*)SIGNATURE, sizeof(SIGNATURE)),
-		acknowledge((uint8_t*)ACK, sizeof(ACK))
+		signature_((uint8_t*)SIGNATURE, sizeof(SIGNATURE)),
+		acknowledge_((uint8_t*)ACK, sizeof(ACK))
 	{
 	}
 
@@ -72,8 +72,8 @@ protected:
     HashTable<SubscriberBase, 10> subscribers_;
 	RingBuffer<PublisherBase*, 10> publisher_queue_;
 
-	ByteSequence signature;
-	ByteSequence acknowledge;
+	ByteSequence signature_;
+	ByteSequence acknowledge_;
 
     void readMessage()
     {
