@@ -32,7 +32,12 @@ public:
 	void publish(const MessageT& msg)
 	{
 		msg_ = &msg;
-		post_->postPublisher(this);
+
+		// if this message is not current pending to be publish, post it
+		if(!this->isPublishPending())
+		{
+			post_->postPublisher(this);
+		}
 	}
 
 	virtual void serializeMessage(SerialStream& stream)

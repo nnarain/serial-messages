@@ -16,11 +16,24 @@ class PublisherBase
 public:
 	const char * topic;
 
-	PublisherBase(const char * topic) : topic(topic)
+	PublisherBase(const char * topic) : topic(topic), publish_pending_(false)
 	{
 	}
 
 	virtual void serializeMessage(SerialStream& stream) = 0;
+
+	bool isPublishPending() const
+	{
+		return publish_pending_;
+	}
+
+	void setPublishPending(bool pending)
+	{
+		publish_pending_ = pending;
+	}
+
+private:
+	bool publish_pending_;
 };
 }
 
