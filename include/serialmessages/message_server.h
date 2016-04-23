@@ -20,15 +20,17 @@ namespace serialmessages
 /**
 	\class MessageServer
 */
-template<typename CommT, unsigned int IN_BUFFER_SIZE=512>
-class MessageServer : public MessageProtocol
+template<
+    class CommT, 
+    unsigned int IN_BUFFER_SIZE=512, 
+    unsigned int OUT_BUFFER_SIZE=512
+>
+class MessageServer : public MessageProtocol<CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE>
 {
 public:
 
 	template<typename... Args>
-	MessageServer(Args&... args) : 
-        comm_(args...),
-        sync_(false)
+	MessageServer(Args&... args) : MessageProtocol<CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE>(args...)
 	{
 	}
 
@@ -36,128 +38,49 @@ public:
 	{
 	}
     
-    bool initialize()
-    {
-        return comm_.initialize();
-    }
-    
     virtual void spinOnce()
     {
         // not synced with the client
-        if(!sync_)
+        if(!this->sync_)
         {
             // send sync sequence
-            comm_.write(signature.data(), signature.size());
+            this->comm_.write(this->signature.data(), this->signature.size());
         }
 
         // attempt to read a byte from the client
-        int byte = comm_.read();
+        int byte = this->comm_.read();
 
         // read byte from client
         if(byte >= 0)
         {
             // check byte sequence to match client ack
-            acknowledge.check((uint8_t)byte);
+            this->acknowledge.check((uint8_t)byte);
             // if matched
-            if(acknowledge.match())
+            if(this->acknowledge.match())
             {
                 LOG_INFO("Client sync");
 
-                acknowledge.reset();
-                sync_ = true;
+                this->acknowledge.reset();
+                this->sync_ = true;
 
                 // read next byte for number of messages the client wants to send
-                uint8_t messages_to_read = readByte();
+                uint8_t messages_to_read = this->readByte();
 
                 // if intent to send message
                 while(messages_to_read--)
                 {
-                    readMessage();
+                    this->readMessage();
                 }
 
                 // send byte indicating number of messages we want to send to client
 
                 // transaction complete, set sync false
-                sync_ = false;
+                this->sync_ = false;
             }
         }
     }
 
-    void subscribe(SubscriberBase* subscriber)
-    {
-        subscribers_.put(subscriber);
-    }
-
 private:
-    CommT comm_;
-    bool sync_;
-
-    HashTable<SubscriberBase, 10> subscribers_;
-
-private:
-    void readMessage()
-    {
-        uint8_t in_buffer[IN_BUFFER_SIZE];
-
-        // read topic string
-        gets((char *)in_buffer);
-
-        // read 4 bytes for message length
-        size_t topic_length = strlen((const char *)in_buffer) + 1;
-        readBytes(in_buffer + topic_length, 4);
-
-        // deserialize topic string and message length
-        stdmsgs::String topic;
-        uint32_t message_length;
-
-        SerialStream ss(in_buffer, IN_BUFFER_SIZE);
-        topic.deserialize(ss);
-        ss >> message_length;
-
-        // read message
-        readBytes(in_buffer + topic_length + 4, message_length);
-
-        // get subscriber using topic string as key
-        SubscriberBase* subscriber = subscribers_.get(topic.data);
-
-        if(subscriber)
-        {
-            // call subscriber callback
-            subscriber->callback(ss);
-        }
-        else
-        {
-            LOG_WARN("No subscriber for /%s", topic.data);
-        }
-    }
-
-    void readBytes(uint8_t* data, size_t nbytes)
-    {
-        while(nbytes--)
-            *data++ = (uint8_t)readByte();
-    }
-
-    uint8_t readByte()
-    {
-        int byte = -1;
-
-        while(byte == -1)
-        {
-            byte = comm_.read();
-        }
-
-        return (int)byte;
-    }
-
-    void gets(char * str)
-    {
-        char c;
-        while(c = (char)readByte())
-        {
-            *str++ = c;
-        }
-        *str = 0;
-    }
 };
 }
 

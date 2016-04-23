@@ -2,8 +2,8 @@
 #ifndef SERIALMESSAGES_HASH_TABLE_H
 #define SERIALMESSAGES_HASH_TABLE_H
 
-#include <cstring>
-#include <cstdint>
+#include <string.h>
+#include <stdint.h>
 
 namespace serialmessages
 {

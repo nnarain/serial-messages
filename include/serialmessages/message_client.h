@@ -15,15 +15,17 @@ namespace serialmessages
 /**
 	\class MessageClient
 */
-template<typename CommT>
-class MessageClient : public MessageProtocol
+template<
+    class CommT,
+    unsigned int IN_BUFFER_SIZE=512,
+    unsigned int OUT_BUFFER_SIZE=512
+>
+class MessageClient : public MessageProtocol<CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE>
 {
 public:
 
 	template<typename... Args>
-	MessageClient(Args... args) : 
-        comm_(args...),
-        sync_(false)
+	MessageClient(Args&... args) : MessageProtocol<CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE>(args...)
 	{
 	}
 
@@ -33,33 +35,33 @@ public:
 
     void initialize()
     {
-        comm_.initialize();
+        this->comm_.initialize();
     }
     
     virtual void spinOnce()
     {
-    	int byte = comm_.read();
+    	int byte = this->comm_.read();
 
         if(byte >= 0)
         {
-            if(!sync_)
+            if(!this->sync_)
             {
-                signature.check((uint8_t)byte);
+                this->signature.check((uint8_t)byte);
 
-                if(signature.match())
+                if(this->signature.match())
                 {
-                    signature.reset();
-                    sync_ = true;
+                    this->signature.reset();
+                    this->sync_ = true;
 
-                    comm_.write(acknowledge.data(), acknowledge.size());
+                    this->comm_.write(this->acknowledge.data(), this->acknowledge.size());
 
                     // tell server the number of messages we want to right
-                    uint8_t messages_to_write = (uint8_t)publisher_queue_.size();
-                    comm_.write(&messages_to_write, 1);
+                    uint8_t messages_to_write = (uint8_t)this->publisher_queue_.size();
+                    this->comm_.write(&messages_to_write, 1);
 
                     while(messages_to_write--)
                     {
-                        writeMessage();
+                        this->writeMessage();
                     }
 
                     // read number of messages server wants to send
@@ -70,38 +72,16 @@ public:
     }
 
 private:
-	CommT comm_;
-    bool sync_;
 
-private:
-    void writeMessage()
-    {
-        PublisherBase* publisher = publisher_queue_.get();
 
-        uint8_t header[64];
-        SerialStream header_stream(header, 64);
+    // void writeInt32(uint32_t value)
+    // {
+    //     uint8_t buff[4];
+    //     SerialStream ss(buff, 4);
+    //     ss << value;
 
-        uint8_t data[128];
-        SerialStream data_stream(data, 128);
-
-        publisher->serializeMessage(data_stream);
-
-        header_stream << publisher->topic << (uint32_t)data_stream.size();
-
-        // write header
-        comm_.write(header, header_stream.size());
-        // write message data
-        comm_.write(data, data_stream.size());
-    }
-
-    void writeInt32(uint32_t value)
-    {
-        uint8_t buff[4];
-        SerialStream ss(buff, 4);
-        ss << value;
-
-        comm_.write(buff, 4);
-    }
+    //     comm_.write(buff, 4);
+    // }
 
 };
 }
