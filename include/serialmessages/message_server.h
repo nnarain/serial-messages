@@ -58,8 +58,6 @@ public:
             // if matched
             if(this->acknowledge_.match())
             {
-                LOG_INFO("Client sync");
-
                 this->acknowledge_.reset();
                 this->sync_ = true;
 

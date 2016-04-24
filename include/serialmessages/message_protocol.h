@@ -58,6 +58,7 @@ public:
 	virtual void postPublisher(PublisherBase* pub)
 	{
 		publisher_queue_.put(pub);
+        pub->setPublishPending(true);
 	}
 
 	void subscribe(SubscriberBase* subscriber)
@@ -129,6 +130,8 @@ protected:
         comm_.write(header, header_stream.size());
         // write message data
         comm_.write(data, data_stream.size());
+
+        publisher->setPublishPending(false);
     }
 
     void readBytes(uint8_t* data, size_t nbytes)

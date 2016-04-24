@@ -66,6 +66,8 @@ public:
 
                     // read number of messages server wants to send
                     // ...
+
+                    this->sync_ = false;
                 }
             }
         }

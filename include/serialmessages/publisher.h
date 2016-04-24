@@ -33,7 +33,7 @@ public:
 	{
 		msg_ = &msg;
 
-		// if this message is not current pending to be publish, post it
+		// if this message is not currently pending to be published, post it
 		if(!this->isPublishPending())
 		{
 			post_->postPublisher(this);
