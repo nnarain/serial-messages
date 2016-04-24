@@ -108,7 +108,7 @@ protected:
         }
         else
         {
-            LOG_WARN("No subscriber for /%s", topic.data);
+        //    LOG_WARN("No subscriber for /%s", topic.data);
         }
     }
 

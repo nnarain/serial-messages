@@ -71,6 +71,14 @@ public:
                 }
 
                 // send byte indicating number of messages we want to send to client
+                uint8_t messages_to_write = this->publisher_queue_.size();
+
+                this->comm_.write(&messages_to_write, 1);
+
+                while(messages_to_write--)
+                {
+                    this->writeMessage();
+                }
 
                 // transaction complete, set sync false
                 this->sync_ = false;

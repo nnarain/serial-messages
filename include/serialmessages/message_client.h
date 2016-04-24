@@ -65,7 +65,12 @@ public:
                     }
 
                     // read number of messages server wants to send
-                    // ...
+                    uint8_t messages_to_read = this->readByte();
+
+                    while(messages_to_read--)
+                    {
+                        this->readMessage();
+                    }
 
                     this->sync_ = false;
                 }
