@@ -57,7 +57,7 @@ public:
 
                     this->comm_.write(this->acknowledge_.data(), this->acknowledge_.size());
 
-                    tell server the number of messages we want to right
+                    // tell server the number of messages we want to right
                     uint8_t messages_to_write = (uint8_t)this->publisher_queue_.size();
                     this->comm_.write(&messages_to_write, 1);
 
