@@ -53,21 +53,25 @@ public:
                     this->signature_.reset();
                     this->sync_ = true;
 
+                    uint8_t count;
+
                     this->comm_.write(this->acknowledge_.data(), this->acknowledge_.size());
 
-                    // tell server the number of messages we want to right
+                    tell server the number of messages we want to right
                     uint8_t messages_to_write = (uint8_t)this->publisher_queue_.size();
                     this->comm_.write(&messages_to_write, 1);
 
-                    while(messages_to_write--)
+                    count = messages_to_write;
+                    while(count--)
                     {
                         this->writeMessage();
                     }
 
                     // read number of messages server wants to send
-                    uint8_t messages_to_read = this->readByte();
+                    uint8_t messages_to_read = (uint8_t)this->readByte();
 
-                    while(messages_to_read--)
+                    count = messages_to_read;
+                    while(count--)
                     {
                         this->readMessage();
                     }
@@ -77,18 +81,6 @@ public:
             }
         }
     }
-
-private:
-
-
-    // void writeInt32(uint32_t value)
-    // {
-    //     uint8_t buff[4];
-    //     SerialStream ss(buff, 4);
-    //     ss << value;
-
-    //     comm_.write(buff, 4);
-    // }
 
 };
 }

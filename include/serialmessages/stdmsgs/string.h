@@ -15,6 +15,7 @@ namespace serialmessages
 {
 	namespace stdmsgs
 	{
+	template<unsigned int BUFFER_SIZE=64>
 	class String : public MessageBase
 	{
 	public:
@@ -32,12 +33,12 @@ namespace serialmessages
 
 		virtual void deserialize(SerialStream& stream)
 		{
-			stream >> in_buffer;
-			data = (const char *)in_buffer;
+			stream >> str;
+			data = (const char *)str;
 		}
 
 	private:
-		char in_buffer[128];
+		char str[BUFFER_SIZE];
 	};
 	}
 }

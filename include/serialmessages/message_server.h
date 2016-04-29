@@ -61,21 +61,27 @@ public:
                 this->acknowledge_.reset();
                 this->sync_ = true;
 
+                LOG_INFO("client sync");
+
+                uint8_t count = 0;
+
                 // read next byte for number of messages the client wants to send
                 uint8_t messages_to_read = this->readByte();
 
-                // if intent to send message
-                while(messages_to_read--)
+                // read messages from client
+                count = messages_to_read;
+                while(count--)
                 {
                     this->readMessage();
                 }
 
                 // send byte indicating number of messages we want to send to client
-                uint8_t messages_to_write = this->publisher_queue_.size();
+                uint8_t messages_to_write = (uint8_t)this->publisher_queue_.size();
 
                 this->comm_.write(&messages_to_write, 1);
 
-                while(messages_to_write--)
+                count = messages_to_write;
+                while(count--)
                 {
                     this->writeMessage();
                 }

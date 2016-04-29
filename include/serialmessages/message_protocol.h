@@ -34,13 +34,15 @@ template<
 class MessageProtocol : public PostPublisher
 {
 public:
+    typedef void(*LogFuncPtr)(const char *);
 
 	template<typename... Args>
 	MessageProtocol(Args&... args) :
 		comm_(args...),
 		sync_(false),
 		signature_((uint8_t*)SIGNATURE, sizeof(SIGNATURE)),
-		acknowledge_((uint8_t*)ACK, sizeof(ACK))
+		acknowledge_((uint8_t*)ACK, sizeof(ACK)),
+        log_(0)
 	{
 	}
 
@@ -66,6 +68,11 @@ public:
         subscribers_.put(subscriber);
     }
 
+    void setLog(LogFuncPtr log)
+    {
+        log_ = log;
+    }
+
 protected:
     CommT comm_;
     bool sync_;
@@ -76,9 +83,11 @@ protected:
 	ByteSequence signature_;
 	ByteSequence acknowledge_;
 
+    LogFuncPtr log_;
+
     void readMessage()
     {
-        uint8_t in_buffer[IN_BUFFER_SIZE];
+        uint8_t in_buffer[IN_BUFFER_SIZE] = {0};
 
         // read topic string
         gets((char *)in_buffer);
@@ -88,7 +97,7 @@ protected:
         readBytes(in_buffer + topic_length, 4);
 
         // deserialize topic string and message length
-        stdmsgs::String topic;
+        stdmsgs::String<> topic;
         uint32_t message_length;
 
         SerialStream ss(in_buffer, IN_BUFFER_SIZE);
@@ -119,8 +128,8 @@ protected:
         uint8_t header[64];
         SerialStream header_stream(header, 64);
 
-        uint8_t data[128];
-        SerialStream data_stream(data, 128);
+        uint8_t data[OUT_BUFFER_SIZE];
+        SerialStream data_stream(data, OUT_BUFFER_SIZE);
 
         publisher->serializeMessage(data_stream);
 
@@ -149,13 +158,13 @@ protected:
             byte = comm_.read();
         }
 
-        return (int)byte;
+        return (uint8_t)byte;
     }
 
     void gets(char * str)
     {
         char c;
-        while(c = (char)readByte())
+        while((c = (char)readByte()) == -1)
         {
             *str++ = c;
         }
