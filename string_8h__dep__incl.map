@@ -1,0 +1,7 @@
+<map id="include/serialmessages/stdmsgs/string.h" name="include/serialmessages/stdmsgs/string.h">
+<area shape="rect" id="node2" href="$hash__table_8h.html" title="include/serialmessages\l/hash_table.h" alt="" coords="271,97,429,138"/>
+<area shape="rect" id="node3" href="$message__protocol_8h.html" title="include/serialmessages\l/message_protocol.h" alt="" coords="154,187,312,229"/>
+<area shape="rect" id="node4" href="$message__client_8h.html" title="include/serialmessages\l/message_client.h" alt="" coords="5,278,163,319"/>
+<area shape="rect" id="node5" href="$message__server_8h.html" title="include/serialmessages\l/message_server.h" alt="" coords="271,278,429,319"/>
+<area shape="rect" id="node6" href="$ring__buffer_8h.html" title="include/serialmessages\l/ring_buffer.h" alt="" coords="37,97,195,138"/>
+</map>

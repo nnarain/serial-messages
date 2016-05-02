@@ -1,0 +1,7 @@
+<map id="serialmessages::MessageServer&lt; CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE &gt;" name="serialmessages::MessageServer&lt; CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE &gt;">
+<area shape="rect" id="node2" href="$classserialmessages_1_1MessageProtocol.html" title="encapsulate protocol specific information " alt="" coords="419,89,656,145"/>
+<area shape="rect" id="node3" href="$classserialmessages_1_1PostPublisher.html" title="serialmessages::PostPublisher" alt="" coords="33,5,236,32"/>
+<area shape="rect" id="node4" href="$classserialmessages_1_1RingBuffer.html" title="serialmessages::RingBuffer\l\&lt; serialmessages::PublisherBase\l *, 10 \&gt;" alt="" coords="26,56,243,112"/>
+<area shape="rect" id="node5" href="$classserialmessages_1_1ByteSequence.html" title="Match sequence of bytes. " alt="" coords="31,136,238,163"/>
+<area shape="rect" id="node6" href="$classserialmessages_1_1HashTable.html" title="serialmessages::HashTable\l\&lt; serialmessages::SubscriberBase, 10 \&gt;" alt="" coords="5,187,264,229"/>
+</map>

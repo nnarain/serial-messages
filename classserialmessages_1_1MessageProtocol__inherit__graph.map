@@ -1,0 +1,5 @@
+<map id="serialmessages::MessageProtocol&lt; CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE &gt;" name="serialmessages::MessageProtocol&lt; CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE &gt;">
+<area shape="rect" id="node3" href="$classserialmessages_1_1MessageClient.html" title="serialmessages::MessageClient\l\&lt; CommT, IN_BUFFER_SIZE,\l OUT_BUFFER_SIZE \&gt;" alt="" coords="544,5,752,61"/>
+<area shape="rect" id="node4" href="$classserialmessages_1_1MessageServer.html" title="serialmessages::MessageServer\l\&lt; CommT, IN_BUFFER_SIZE,\l OUT_BUFFER_SIZE \&gt;" alt="" coords="542,85,754,141"/>
+<area shape="rect" id="node2" href="$classserialmessages_1_1PostPublisher.html" title="serialmessages::PostPublisher" alt="" coords="5,60,208,87"/>
+</map>

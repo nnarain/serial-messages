@@ -1,0 +1,6 @@
+<map id="include/serialmessages/subscriber_base.h" name="include/serialmessages/subscriber_base.h">
+<area shape="rect" id="node2" href="$message__protocol_8h.html" title="include/serialmessages\l/message_protocol.h" alt="" coords="5,97,163,138"/>
+<area shape="rect" id="node5" href="$subscriber_8h.html" title="include/serialmessages\l/subscriber.h" alt="" coords="187,97,345,138"/>
+<area shape="rect" id="node3" href="$message__client_8h.html" title="include/serialmessages\l/message_client.h" alt="" coords="5,187,163,229"/>
+<area shape="rect" id="node4" href="$message__server_8h.html" title="include/serialmessages\l/message_server.h" alt="" coords="187,187,345,229"/>
+</map>

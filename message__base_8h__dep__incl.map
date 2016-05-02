@@ -1,0 +1,9 @@
+<map id="include/serialmessages/message_base.h" name="include/serialmessages/message_base.h">
+<area shape="rect" id="node2" href="$string_8h.html" title="include/serialmessages\l/stdmsgs/string.h" alt="" coords="154,97,312,138"/>
+<area shape="rect" id="node8" href="$color__rgb_8h.html" title="include/serialmessages\l/stdmsgs/color_rgb.h" alt="" coords="337,97,495,138"/>
+<area shape="rect" id="node3" href="$hash__table_8h.html" title="include/serialmessages\l/hash_table.h" alt="" coords="271,187,429,229"/>
+<area shape="rect" id="node4" href="$message__protocol_8h.html" title="include/serialmessages\l/message_protocol.h" alt="" coords="154,278,312,319"/>
+<area shape="rect" id="node5" href="$message__client_8h.html" title="include/serialmessages\l/message_client.h" alt="" coords="5,369,163,410"/>
+<area shape="rect" id="node6" href="$message__server_8h.html" title="include/serialmessages\l/message_server.h" alt="" coords="271,369,429,410"/>
+<area shape="rect" id="node7" href="$ring__buffer_8h.html" title="include/serialmessages\l/ring_buffer.h" alt="" coords="37,187,195,229"/>
+</map>

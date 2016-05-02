@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classserialmessages_1_1PostPublisher.html" title="serialmessages::PostPublisher" alt="" coords="5,60,208,87"/>
+<area shape="rect" id="node2" href="$classserialmessages_1_1MessageProtocol.html" title="encapsulate protocol specific information " alt="" coords="256,45,493,101"/>
+<area shape="rect" id="node3" href="$classserialmessages_1_1MessageClient.html" title="serialmessages::MessageClient\l\&lt; CommT, IN_BUFFER_SIZE,\l OUT_BUFFER_SIZE \&gt;" alt="" coords="544,5,752,61"/>
+<area shape="rect" id="node4" href="$classserialmessages_1_1MessageServer.html" title="serialmessages::MessageServer\l\&lt; CommT, IN_BUFFER_SIZE,\l OUT_BUFFER_SIZE \&gt;" alt="" coords="542,85,754,141"/>
+</map>

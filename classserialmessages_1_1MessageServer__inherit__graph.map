@@ -1,0 +1,4 @@
+<map id="serialmessages::MessageServer&lt; CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE &gt;" name="serialmessages::MessageServer&lt; CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE &gt;">
+<area shape="rect" id="node2" href="$classserialmessages_1_1MessageProtocol.html" title="encapsulate protocol specific information " alt="" coords="4,80,240,136"/>
+<area shape="rect" id="node3" href="$classserialmessages_1_1PostPublisher.html" title="serialmessages::PostPublisher" alt="" coords="21,5,224,32"/>
+</map>

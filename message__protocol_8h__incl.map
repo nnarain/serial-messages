@@ -1,0 +1,11 @@
+<map id="include/serialmessages/message_protocol.h" name="include/serialmessages/message_protocol.h">
+<area shape="rect" id="node2" href="$byte__sequence_8h.html" title="byte_sequence.h" alt="" coords="249,96,369,123"/>
+<area shape="rect" id="node4" href="$publisher__base_8h.html" title="publisher_base.h" alt="" coords="53,171,173,197"/>
+<area shape="rect" id="node7" href="$subscriber__base_8h.html" title="subscriber_base.h" alt="" coords="205,253,333,280"/>
+<area shape="rect" id="node8" href="$post__publisher_8h.html" title="post_publisher.h" alt="" coords="5,96,121,123"/>
+<area shape="rect" id="node9" href="$hash__table_8h.html" title="hash_table.h" alt="" coords="564,96,660,123"/>
+<area shape="rect" id="node10" href="$string_8h.html" title="string.h" alt="" coords="446,171,511,197"/>
+<area shape="rect" id="node12" href="$ring__buffer_8h.html" title="ring_buffer.h" alt="" coords="394,96,488,123"/>
+<area shape="rect" id="node5" href="$serial__stream_8h.html" title="serial_stream.h" alt="" coords="258,336,368,363"/>
+<area shape="rect" id="node11" href="$message__base_8h.html" title="serialmessages/message\l_base.h" alt="" coords="364,246,535,287"/>
+</map>
