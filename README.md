@@ -10,6 +10,84 @@ This library is independent of data transport method, as the user of this librar
 Example
 -------
 
+Create a server program. Where SerialComm is a user defined type for sending data over the serial port
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
+
+// server
+// main.cpp
+
+#include <serialmessages/message_server.h>
+#include <serialmessages/publisher.h>
+#include <serialmessages/stdmsgs/string.h>
+
+#include "serial_comm.h"
+
+using namespace serialmessages;
+
+int main()
+{
+	MessageServer<SerialComm> server;
+
+	Publisher<std::String<>> publisher("my_topic", &server);
+
+	stdmsgs::String my_string;
+	my_string.data = "Hello World";
+
+	server.initialize();
+
+	while(true)
+	{
+		publisher.publish(my_string);
+		server.spinOnce();
+	}
 
 
+	return 0;
+}
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create a client.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
+
+// client
+// main.cpp
+
+#include <serialmessages/message_client.h>
+#include <serialmessages/subscriber.h>
+
+#include <iostream>
+
+#include "serial_comm.h"
+
+using namespace serialmessages;
+
+void myCallback(stdmsgs::String<>& msg)
+{
+	std::cout << msg.data << std::endl;
+}
+
+int main()
+{
+	MessageClient<SerialComm> client;
+	
+	Subscriber<stdmsgs::String<>> subscriber("my_topic", myCallback);
+
+	client.initialize();
+
+	while(true)
+	{
+		client.spinOnce();
+	}
+
+	return 0;
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+TODO
+----
+
+* More detailed example
