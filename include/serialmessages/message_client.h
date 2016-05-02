@@ -53,9 +53,16 @@ public:
                     this->signature_.reset();
                     this->sync_ = true;
 
-                    uint8_t count;
-
+                    // send server acknowledge
                     this->comm_.write(this->acknowledge_.data(), this->acknowledge_.size());
+
+                    // discard any bytes until a server ACK, this is to sync the byte stream with the server
+                    uint8_t byte = 0;
+                    this->log(1);
+                    while((byte = this->readByte()) != 6);
+                    this->log(0);
+
+                    uint8_t count;
 
                     // tell server the number of messages we want to right
                     uint8_t messages_to_write = (uint8_t)this->publisher_queue_.size();
@@ -67,14 +74,23 @@ public:
                         this->writeMessage();
                     }
 
+                    // read that the server has recieved our messages
+                    uint8_t messages_recieved_ack = this->readByte();
+
                     // read number of messages server wants to send
-                    uint8_t messages_to_read = (uint8_t)this->readByte();
+                    uint8_t messages_to_read = this->readByte();
 
                     count = messages_to_read;
+                //    count = 0;//messages_to_read;
+                    if(messages_to_read > 0) this->log(1);
                     while(count--)
                     {
                         this->readMessage();
                     }
+
+                    this->comm_.write(&messages_recieved_ack, 1);
+
+                    // transaction has completed
 
                     this->sync_ = false;
                 }

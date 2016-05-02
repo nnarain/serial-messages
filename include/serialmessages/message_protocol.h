@@ -34,7 +34,8 @@ template<
 class MessageProtocol : public PostPublisher
 {
 public:
-    typedef void(*LogFuncPtr)(const char *);
+
+    typedef void(*LogFuncPtr)(uint8_t);
 
 	template<typename... Args>
 	MessageProtocol(Args&... args) :
@@ -117,7 +118,6 @@ protected:
         }
         else
         {
-        //    LOG_WARN("No subscriber for /%s", topic.data);
         }
     }
 
@@ -152,23 +152,28 @@ protected:
     uint8_t readByte()
     {
         int byte = -1;
-
-        while(byte == -1)
-        {
-            byte = comm_.read();
-        }
+        while((byte = comm_.read()) == -1);
 
         return (uint8_t)byte;
     }
 
     void gets(char * str)
     {
-        char c;
-        while((c = (char)readByte()) == -1)
+        char c = -1;
+        while(c != 0)
         {
-            *str++ = c;
+            c = (char)readByte();
+
+            if(c >= 0)
+            {
+                *str++ = c;
+            }
         }
-        *str = 0;
+    }
+
+    void log(uint8_t b)
+    {
+        if(log_) log_(b);
     }
 };
 }

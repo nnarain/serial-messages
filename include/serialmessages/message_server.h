@@ -61,12 +61,19 @@ public:
                 this->acknowledge_.reset();
                 this->sync_ = true;
 
+                // send single ACK character to client so it can sync with the byte stream
+                uint8_t ack = 6;
+                this->comm_.write(&ack, 1);
+
                 LOG_INFO("client sync");
 
                 uint8_t count = 0;
 
                 // read next byte for number of messages the client wants to send
+                // LOG_INFO("... reading from client");
                 uint8_t messages_to_read = this->readByte();
+
+                LOG_INFO("messages to read: %d", messages_to_read);
 
                 // read messages from client
                 count = messages_to_read;
@@ -75,16 +82,25 @@ public:
                     this->readMessage();
                 }
 
+                // ACK to client, that server has read the messages
+                this->comm_.write(&ack, 1);
+
                 // send byte indicating number of messages we want to send to client
-                uint8_t messages_to_write = (uint8_t)this->publisher_queue_.size();
-
-                this->comm_.write(&messages_to_write, 1);
-
-                count = messages_to_write;
+                messages_to_write_ = (uint8_t)this->publisher_queue_.size();
+                this->comm_.write(&messages_to_write_, 1);
+                LOG_INFO("message to write: %d", messages_to_write_);
+                count = messages_to_write_;
                 while(count--)
                 {
                     this->writeMessage();
                 }
+
+                uint8_t messages_recieved_ack = this->readByte();
+
+                if(messages_recieved_ack == ack) 
+                    LOG_INFO("client has recieved our messages");
+                else
+                    LOG_INFO("client sent %d", messages_recieved_ack);
 
                 // transaction complete, set sync false
                 this->sync_ = false;
@@ -93,6 +109,7 @@ public:
     }
 
 private:
+    uint8_t messages_to_write_;
 };
 }
 
