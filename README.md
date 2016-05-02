@@ -29,9 +29,9 @@ int main()
 {
 	MessageServer<SerialComm> server;
 
-	Publisher<std::String<>> publisher("my_topic", &server);
+	Publisher<stdmsgs::String<>> publisher("my_topic", &server);
 
-	stdmsgs::String my_string;
+	stdmsgs::String<> my_string;
 	my_string.data = "Hello World";
 
 	server.initialize();
@@ -64,7 +64,7 @@ Create a client.
 
 using namespace serialmessages;
 
-void myCallback(stdmsgs::String<>& msg)
+void myCallback(const stdmsgs::String<>& msg)
 {
 	std::cout << msg.data << std::endl;
 }
