@@ -91,3 +91,4 @@ TODO
 ----
 
 * More detailed example
+* added checksum error detection
