@@ -100,9 +100,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">{</div>
 <div class="line">    <a class="code" href="classserialmessages_1_1MessageServer.html">MessageServer&lt;SerialComm&gt;</a> server;</div>
 <div class="line"></div>
-<div class="line">    <a class="code" href="classserialmessages_1_1Publisher.html">Publisher&lt;std::String&lt;&gt;</a>&gt; publisher(<span class="stringliteral">&quot;my_topic&quot;</span>, &amp;server);</div>
+<div class="line">    <a class="code" href="classserialmessages_1_1Publisher.html">Publisher&lt;stdmsgs::String&lt;&gt;</a>&gt; publisher(<span class="stringliteral">&quot;my_topic&quot;</span>, &amp;server);</div>
 <div class="line"></div>
-<div class="line">    <a class="code" href="classserialmessages_1_1stdmsgs_1_1String.html">stdmsgs::String</a> my_string;</div>
+<div class="line">    <a class="code" href="classserialmessages_1_1stdmsgs_1_1String.html">stdmsgs::String&lt;&gt;</a> my_string;</div>
 <div class="line">    my_string.<a class="code" href="classserialmessages_1_1stdmsgs_1_1String.html#a39a84ce6ca34948d654e3729be7ef330">data</a> = <span class="stringliteral">&quot;Hello World&quot;</span>;</div>
 <div class="line"></div>
 <div class="line">    server.<a class="code" href="classserialmessages_1_1MessageProtocol.html#aa1b1a31b6830c6869df9d713bf7ba468">initialize</a>();</div>
@@ -129,7 +129,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"></div>
 <div class="line"><span class="keyword">using namespace </span>serialmessages;</div>
 <div class="line"></div>
-<div class="line"><span class="keywordtype">void</span> myCallback(<a class="code" href="classserialmessages_1_1stdmsgs_1_1String.html">stdmsgs::String&lt;&gt;</a>&amp; msg)</div>
+<div class="line"><span class="keywordtype">void</span> myCallback(<span class="keyword">const</span> <a class="code" href="classserialmessages_1_1stdmsgs_1_1String.html">stdmsgs::String&lt;&gt;</a>&amp; msg)</div>
 <div class="line">{</div>
 <div class="line">    std::cout &lt;&lt; msg.<a class="code" href="classserialmessages_1_1stdmsgs_1_1String.html#a39a84ce6ca34948d654e3729be7ef330">data</a> &lt;&lt; std::endl;</div>
 <div class="line">}</div>
@@ -157,7 +157,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 2 2016 19:54:31 for Serial Messages by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon May 2 2016 20:04:40 for Serial Messages by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
