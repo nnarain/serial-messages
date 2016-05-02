@@ -46,10 +46,13 @@ public:
         {
             if(!this->sync_)
             {
+                // check byte in signature state machine
                 this->signature_.check((uint8_t)byte);
 
+                // if sequence matches
                 if(this->signature_.match())
                 {
+                    // reset state machine
                     this->signature_.reset();
                     this->sync_ = true;
 
@@ -58,9 +61,7 @@ public:
 
                     // discard any bytes until a server ACK, this is to sync the byte stream with the server
                     uint8_t byte = 0;
-                    this->log(1);
                     while((byte = this->readByte()) != 6);
-                    this->log(0);
 
                     uint8_t count;
 
@@ -68,6 +69,7 @@ public:
                     uint8_t messages_to_write = (uint8_t)this->publisher_queue_.size();
                     this->comm_.write(&messages_to_write, 1);
 
+                    // right messages
                     count = messages_to_write;
                     while(count--)
                     {
@@ -81,8 +83,6 @@ public:
                     uint8_t messages_to_read = this->readByte();
 
                     count = messages_to_read;
-                //    count = 0;//messages_to_read;
-                    if(messages_to_read > 0) this->log(1);
                     while(count--)
                     {
                         this->readMessage();

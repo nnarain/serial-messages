@@ -30,7 +30,9 @@ class MessageServer : public MessageProtocol<CommT, IN_BUFFER_SIZE, OUT_BUFFER_S
 public:
 
 	template<typename... Args>
-	MessageServer(Args&... args) : MessageProtocol<CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE>(args...)
+	MessageServer(Args&... args) : 
+        MessageProtocol<CommT, IN_BUFFER_SIZE, OUT_BUFFER_SIZE>(args...),
+        last_send_(0)
 	{
 	}
 
@@ -43,8 +45,16 @@ public:
         // not synced with the client
         if(!this->sync_)
         {
-            // send sync sequence
-            this->comm_.write(this->signature_.data(), this->signature_.size());
+            uint32_t now = this->comm_.time();
+
+            // check if sync send period has elapsed
+            if((now - last_send_) > 10)
+            {
+                // send sync sequence
+                this->comm_.write(this->signature_.data(), this->signature_.size());
+
+                last_send_ = now;
+            }
         }
 
         // attempt to read a byte from the client
@@ -53,7 +63,7 @@ public:
         // read byte from client
         if(byte >= 0)
         {
-            // check byte sequence to match client ack
+            // check byte sequence to match client acknowledge
             this->acknowledge_.check((uint8_t)byte);
             // if matched
             if(this->acknowledge_.match())
@@ -65,15 +75,10 @@ public:
                 uint8_t ack = 6;
                 this->comm_.write(&ack, 1);
 
-                LOG_INFO("client sync");
-
                 uint8_t count = 0;
 
                 // read next byte for number of messages the client wants to send
-                // LOG_INFO("... reading from client");
                 uint8_t messages_to_read = this->readByte();
-
-                LOG_INFO("messages to read: %d", messages_to_read);
 
                 // read messages from client
                 count = messages_to_read;
@@ -88,7 +93,7 @@ public:
                 // send byte indicating number of messages we want to send to client
                 messages_to_write_ = (uint8_t)this->publisher_queue_.size();
                 this->comm_.write(&messages_to_write_, 1);
-                LOG_INFO("message to write: %d", messages_to_write_);
+
                 count = messages_to_write_;
                 while(count--)
                 {
@@ -97,10 +102,10 @@ public:
 
                 uint8_t messages_recieved_ack = this->readByte();
 
-                if(messages_recieved_ack == ack) 
-                    LOG_INFO("client has recieved our messages");
-                else
-                    LOG_INFO("client sent %d", messages_recieved_ack);
+                // if(messages_recieved_ack == ack) 
+                //     LOG_INFO("client has recieved our messages");
+                // else
+                //     LOG_INFO("client sent %d", messages_recieved_ack);
 
                 // transaction complete, set sync false
                 this->sync_ = false;
@@ -109,6 +114,7 @@ public:
     }
 
 private:
+    uint32_t last_send_;
     uint8_t messages_to_write_;
 };
 }
