@@ -29,7 +29,7 @@ public:
 	{
 	}
 
-	void publish(const MessageT& msg)
+	void publish(MessageT& msg)
 	{
 		msg_ = &msg;
 
