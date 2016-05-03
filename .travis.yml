@@ -16,9 +16,12 @@ before_install:
 
 
 install:
+  - install_general
   - install_docs
 
-script: echo "Just building docs for now"
+script:
+  - mkdir build && cd build
+  - make && make test
 
 after_success:
   - deploy_docs
