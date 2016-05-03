@@ -1,3 +1,6 @@
+#ifndef TEST_SERIAL_STREAM
+#define TEST_SERIAL_STREAM
+
 #include <cxxtest/TestSuite.h>
 #include <stdint.h>
 #include <string.h>
@@ -82,3 +85,5 @@ public:
 		TS_ASSERT(strcmp(out, str) == 0);
 	}
 };
+
+#endif
