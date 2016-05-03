@@ -21,6 +21,7 @@ install:
 
 script:
   - mkdir build && cd build
+  - cmake ..
   - make && make test
 
 after_success:
