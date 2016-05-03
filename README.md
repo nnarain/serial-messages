@@ -57,6 +57,7 @@ Create a client.
 
 #include <serialmessages/message_client.h>
 #include <serialmessages/subscriber.h>
+#include <serialmessages/stdmsgs/string.h>
 
 #include <iostream>
 
@@ -74,6 +75,7 @@ int main()
 	MessageClient<SerialComm> client;
 	
 	Subscriber<stdmsgs::String<>> subscriber("my_topic", myCallback);
+	client.subscribe(&subscriber);
 
 	client.initialize();
 
