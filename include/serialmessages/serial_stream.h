@@ -17,6 +17,7 @@ class SerialStream
 private:
     /* Floating point conversion structures */
 
+    //! structure to do conversion between float and unsigned int
     template<typename UintSz>
     struct FloatToUintT
     {
@@ -28,6 +29,7 @@ private:
     };
     typedef FloatToUintT<uint32_t> FloatToUint;
 
+    //! structure to do conversion between double and unsigned int
     template<typename UintSz>
     struct DoubleToUintT
     {
@@ -41,6 +43,10 @@ private:
 
 public:
 
+    /**
+        \param buffer pointer for a buffer for data
+        \param max max buffer size
+    */
     SerialStream(uint8_t * buffer, size_t max) : 
         buffer_(buffer), 
         length_max_(max),
@@ -54,6 +60,9 @@ public:
     {
     }
     
+    /**
+        Reset serial stream. Serialization and deserialization begins at the start of buffer
+    */
     void reset()
     {
         num_bytes_ = 0;
@@ -61,6 +70,9 @@ public:
         checksum_ = 0;
     }
 
+    /**
+        \return number of bytes serialized
+    */
     size_t size()
     {
         return num_bytes_;
@@ -70,6 +82,11 @@ public:
 
     /* Serialization */
     
+    /**
+        Serialize unsigned 8 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator<<(const uint8_t rhs)
     {
         buffer_[num_bytes_++] = rhs;
@@ -77,6 +94,11 @@ public:
         return *this;
     }
 
+    /**
+        Serialize unsigned 16 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator<<(const uint16_t rhs)
     {
         for(int i = (sizeof(uint16_t) * 8) - 8; i >= 0; i -= 8)
@@ -89,6 +111,11 @@ public:
         return *this;
     }
 
+    /**
+        Serialize unsigned 32 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator<<(const uint32_t rhs)
     {
         for(int i = (sizeof(uint32_t) * 8) - 8; i >= 0; i -= 8)
@@ -100,6 +127,11 @@ public:
         return *this;
     }
 
+    /**
+        Serialize unsigned 64 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator<<(const uint64_t rhs)
     {
         for(int i = (sizeof(uint64_t) * 8) - 8; i >= 0; i -= 8)
@@ -111,6 +143,11 @@ public:
         return *this;    
     }
 
+    /**
+        Serialize signed 8 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator<<(const int8_t rhs)
     {
         buffer_[num_bytes_++] = rhs;
@@ -118,6 +155,11 @@ public:
         return *this;
     }
 
+    /**
+        Serialize signed 16 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator<<(const int16_t rhs)
     {
         for(int i = (sizeof(int16_t) * 8) - 8; i >= 0; i -= 8)
@@ -130,6 +172,11 @@ public:
         return *this;
     }
 
+    /**
+        Serialize signed 32 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator<<(const int32_t rhs)
     {
         for(int i = (sizeof(int32_t) * 8) - 8; i >= 0; i -= 8)
@@ -141,6 +188,11 @@ public:
         return *this;
     }
 
+    /**
+        Serialize signed 64 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator<<(const int64_t rhs)
     {
         for(int i = (sizeof(int64_t) * 8) - 8; i >= 0; i -= 8)
@@ -152,6 +204,11 @@ public:
         return *this;    
     }
 
+    /**
+        Serialize float
+
+        @return this serial stream
+    */
     SerialStream& operator<<(float rhs)
     {
         FloatToUint float_to_uint;
@@ -162,6 +219,11 @@ public:
         return *this;
     }
 
+    /**
+        Serialize double
+
+        @return this serial stream
+    */
     SerialStream& operator<<(double rhs)
     {
         DoubleToUint double_to_unit;
@@ -172,6 +234,11 @@ public:
         return *this;
     }
 
+    /**
+        Serialize string
+
+        @return this serial stream
+    */
     SerialStream& operator<<(const char *str)
     {
         while(*str)
@@ -188,12 +255,22 @@ public:
 
     /* Deserialization */
 
+    /**
+        Deserialize unsigned 8 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator>>(uint8_t& rhs)
     {
         rhs = buffer_[read_idx_++];
         return *this;
     }
 
+    /**
+        Deserialize unsigned 16 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator>>(uint16_t& rhs)
     {
         rhs = 0;
@@ -203,6 +280,11 @@ public:
         return *this;
     }
 
+    /**
+        Deserialize unsigned 32 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator>>(uint32_t& rhs)
     {
         rhs = 0;
@@ -214,6 +296,11 @@ public:
         return *this;
     }
 
+    /**
+        Deserialize unsigned 64 bit integer
+
+        @return this serial stream
+    */
     SerialStream& operator>>(uint64_t& rhs)
     {
         rhs = 0;
@@ -229,6 +316,11 @@ public:
         return *this;
     }
 
+    /**
+        Deserialize float
+
+        @return this serial stream
+    */
     SerialStream& operator>>(float& rhs)
     {
         FloatToUint float_to_uint;
@@ -239,6 +331,11 @@ public:
         return *this;
     }
 
+    /**
+        Deserialize double
+
+        @return this serial stream
+    */
     SerialStream& operator>>(double& rhs)
     {
         DoubleToUint double_to_unit;
@@ -249,6 +346,11 @@ public:
         return *this;
     }
 
+    /**
+        Deserialize string
+
+        @return this serial stream
+    */
     SerialStream& operator>>(char * str)
     {
         while(buffer_[read_idx_])
@@ -262,11 +364,11 @@ public:
     }
 
 private:
-    uint8_t* buffer_; ///< Pointer to a buffer of data
-    size_t length_max_;   ///< Length of the buffer
-    size_t num_bytes_; ///< bytes in the serial stream
-    size_t read_idx_;
-    uint8_t checksum_;
+    uint8_t* buffer_;   ///< Pointer to a buffer of data
+    size_t length_max_; ///< Length of the buffer
+    size_t num_bytes_;  ///< bytes in the serial stream
+    size_t read_idx_;   ///< current index to read from
+    uint8_t checksum_;  ///< checksum for stream stream
 };
 }
 
