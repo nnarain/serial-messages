@@ -1,4 +1,4 @@
-# Serial Messages
+# Serial Messages [![Build Status](https://travis-ci.org/nnarain/serial-messages.svg?branch=master)](https://travis-ci.org/nnarain/serial-messages)
 
 Rosserial inspired serial messaging library.
 
