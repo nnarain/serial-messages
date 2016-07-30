@@ -105,6 +105,9 @@ protected:
         topic.deserialize(ss);
         ss >> message_length;
 
+        // uint8_t available = comm_.available();
+        // comm_.write(&available, 1);
+
         // read message
         readBytes(in_buffer + topic_length + 4, message_length);
 
@@ -123,16 +126,21 @@ protected:
 
     void writeMessage()
     {
+        // get the next publisher from the queue
         PublisherBase* publisher = publisher_queue_.get();
 
+        // buffer for header
         uint8_t header[64];
         SerialStream header_stream(header, 64);
 
+        // buffer for data
         uint8_t data[OUT_BUFFER_SIZE];
         SerialStream data_stream(data, OUT_BUFFER_SIZE);
 
+        // serialize the message in the stream
         publisher->serializeMessage(data_stream);
 
+        // header content
         header_stream << publisher->topic << (uint32_t)data_stream.size();
 
         // write header
@@ -140,13 +148,14 @@ protected:
         // write message data
         comm_.write(data, data_stream.size());
 
+        // indicate that this publisher has sent its message
         publisher->setPublishPending(false);
     }
 
     void readBytes(uint8_t* data, size_t nbytes)
     {
         while(nbytes--)
-            *data++ = (uint8_t)readByte();
+            *data++ = readByte();
     }
 
     uint8_t readByte()

@@ -1,12 +1,12 @@
 /**
-	RGB message
+	Test message
 	
-	\file color_rgb.h
+	\file test.h
 	\author Natesh Narain <nnaraindev@gmail.com>
 */
 
-#ifndef SERIALMESSAGES_STDMSGS_COLORRGB_H
-#define SERIALMESSAGES_STDMSGS_COLORRGB_H
+#ifndef SERIALMESSAGES_STDMSGS_TEST_H
+#define SERIALMESSAGES_STDMSGS_TEST_H
 
 #include "serialmessages/message_base.h"
 
@@ -16,18 +16,21 @@ namespace serialmessages
 {
 	namespace stdmsgs
 	{
-		class ColorRGB : public MessageBase
+		class Test : public MessageBase
 		{
 		public:
 			uint8_t r;
 			uint8_t g;
 			uint8_t b;
+			uint8_t a;
 
-			ColorRGB() : r(0), g(0), b(0)
+			uint8_t x, y, z;
+
+			Test() : r(0), g(0), b(0), a(0), x(0), y(0), z(0)
 			{
 			}
 
-			~ColorRGB()
+			~Test()
 			{
 			}
 
@@ -44,4 +47,4 @@ namespace serialmessages
 	}
 }
 
-#endif // SERIALMESSAGES_STDMSGS_COLORRGB_H
+#endif // SERIALMESSAGES_STDMSGS_TEST_H

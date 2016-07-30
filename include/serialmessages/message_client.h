@@ -82,11 +82,12 @@ public:
                     // read number of messages server wants to send
                     uint8_t messages_to_read = this->readByte();
 
-                    count = messages_to_read;
-                    while(count--)
+                //    this->log(1);
+                    while(messages_to_read--)
                     {
                         this->readMessage();
                     }
+                //    this->log(0);
 
                     this->comm_.write(&messages_recieved_ack, 1);
 

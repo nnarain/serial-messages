@@ -48,7 +48,7 @@ public:
             uint32_t now = this->comm_.time();
 
             // check if sync send period has elapsed
-            if((now - last_send_) > 10)
+            if((now - last_send_) > 5)
             {
                 // send sync sequence
                 this->comm_.write(this->signature_.data(), this->signature_.size());
@@ -93,19 +93,23 @@ public:
                 // send byte indicating number of messages we want to send to client
                 messages_to_write_ = (uint8_t)this->publisher_queue_.size();
                 this->comm_.write(&messages_to_write_, 1);
-
+                
                 count = messages_to_write_;
                 while(count--)
                 {
                     this->writeMessage();
                 }
 
+                // uint8_t last_byte = this->readByte();
+                // LOG_INFO("avaible: %d", last_byte);
+
+                LOG_INFO("wait for client ack");
                 uint8_t messages_recieved_ack = this->readByte();
 
-                // if(messages_recieved_ack == ack) 
-                //     LOG_INFO("client has recieved our messages");
-                // else
-                //     LOG_INFO("client sent %d", messages_recieved_ack);
+                if(messages_recieved_ack == ack) 
+                    LOG_INFO("client has recieved our messages");
+                else
+                    LOG_INFO("client sent %d", messages_recieved_ack);
 
                 // transaction complete, set sync false
                 this->sync_ = false;
